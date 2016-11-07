@@ -132,7 +132,9 @@ if routeID == -1:
 
 # get_times(isAM, date, routeID, pickID, dropID):
 times = shuttle.get_times(amk, dt, routeID, pick, drop)
-fk = {k:form.getvalue(k) for k in form.keys()}
+fk = {}
+for k in form.keys():
+  fk[k] = form.getvalue(k)
 fk["rid"] = routeID
 
 print '<div id="times">'

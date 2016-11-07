@@ -96,7 +96,9 @@ alldata = json.load(open("all.json"))
 routes = list(alldata[amk].keys())
 routes.sort()
 
-fk = {k:form.getvalue(k) for k in form.keys()}
+fk = {}
+for k in form.keys():
+  fk[k] = form.getvalue(k)
 print '<div id="newbar">'
 fk["am"] = "1"
 print '<a href="%s?%s">am</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))

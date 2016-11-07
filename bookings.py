@@ -38,7 +38,9 @@ print '''<html>
 
 alldata = json.load(open("all.json"))
 routes = list(alldata["true"].keys()) + list(alldata["false"].keys())
-freq = {v[:-3]: 0 for v in routes}
+freq = {}
+for v in routes:
+  freq[v[:-3]] = 0
 for b in bookings:
   freq[b[0][:-3]] += 1
 freq = list(freq.items())
