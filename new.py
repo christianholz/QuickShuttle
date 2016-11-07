@@ -138,7 +138,7 @@ for r in routes:
     print '''<a href="#" onclick="pSel('%s','%s',this);return false">''' % (r, d[0])
     print '<span class="st">%s</span>' % (d[1])
     if m:
-      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C%s,%s&key=%s"/>' % (
+      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
         d[2], d[3], d[2], d[3], shconstants.GKEY
       )
     print '</a></div>'  
@@ -150,7 +150,7 @@ for r in routes:
     print '''<a href="#" onclick="dSel('%s','%s',this);return false">''' % (r, d[0])
     print '<span class="st">%s</span>' % (d[1])
     if m:
-      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C%s,%s&key=%s"/>' % (
+      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
         d[2], d[3], d[2], d[3], shconstants.GKEY
       )
     print '</a></div>'  

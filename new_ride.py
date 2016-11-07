@@ -103,7 +103,7 @@ print '''<div id="route_info">
 <div class="pstop">
 <span class="st">%s</span>''' % (pi[0])
 if m:
-  print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C%s,%s&key=%s"/>' % (
+  print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
     pi[1], pi[2], pi[1], pi[2], shconstants.GKEY
   )
 print '''</div>
@@ -112,7 +112,7 @@ print '''</div>
 <div class="dstop">
 <span class="st">%s</span>''' % (di[0])
 if m:
-  print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C%s,%s&key=%s"/>' % (
+  print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
     di[1], di[2], di[1], di[2], shconstants.GKEY
   )
 print '''</div>
