@@ -76,16 +76,16 @@ else:
 
 print '''<html>
 <head>
-<title>New booking for {}</title>
+<title>New booking for %s</title>
 <link href="style.css" rel="stylesheet" />
-'''.format(u)
+''' % (u)
 
 print '''<script>rid='';pid='';did='';
-function pSel(r,d,e){{rid=r;pid=d;e.parentElement.style.backgroundColor="red";nav();}}
-function dSel(r,d,e){{rid=r;did=d;e.parentElement.style.backgroundColor="red";nav();}}
-function nav(){{if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?k={}&dt={}&am={}&m={}&r="+rid+"&p="+pid+"&d="+did;}}
+function pSel(r,d,e){rid=r;pid=d;e.parentElement.style.backgroundColor="red";nav();}
+function dSel(r,d,e){rid=r;did=d;e.parentElement.style.backgroundColor="red";nav();}
+function nav(){if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?k=%s&dt=%s&am=%s&m=%s&r="+rid+"&p="+pid+"&d="+did;}
 </script>
-'''.format(key, dt.strftime("%m/%-d/%Y"), amk, mk)
+''' % (key, dt.strftime("%m/%-d/%Y"), amk, mk)
 
 print '''</head>
 <body>
@@ -99,9 +99,9 @@ routes.sort()
 fk = {k:form.getvalue(k) for k in form.keys()}
 print '<div id="newbar">'
 fk["am"] = "1"
-print '<a href="{}?{}">am</a>'.format(os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
+print '<a href="%s?%s">am</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
 fk["am"] = "0"
-print '<a href="{}?{}">pm</a> |'.format(os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
+print '<a href="%s?%s">pm</a> |' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
 
 dn = dt
 for i in range(5):
@@ -110,9 +110,9 @@ for i in range(5):
     dn += datetime.timedelta(1, 0)
   fk["dt"] = dn.strftime("%m/%-d/%Y")
   fk["am"] = "1"
-  print ' <a href="{}?{}">{} am</a>'.format(os.environ["SCRIPT_NAME"], urllib.urlencode(fk), dn.strftime("%a, %m/%-d"))
+  print ' <a href="%s?%s">%s am</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk), dn.strftime("%a, %m/%-d"))
   fk["am"] = "0"
-  print ' <a href="{}?{}">pm</a>'.format(os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
+  print ' <a href="%s?%s">pm</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
 print '</div>'
 
 print '<div id="routes">'
@@ -123,20 +123,20 @@ try:
 except:
   pass
 
-print '<div id="info">{}{}</div>'.format(dt.strftime("%a, %m/%-d"), ams)
+print '<div id="info">%s%s</div>' % (dt.strftime("%a, %m/%-d"), ams)
 
 blu = {False: "0", True: "1"}
 
 for r in routes:
-  print '<div class="route"><span class="t">{}</span>'.format(r)
+  print '<div class="route"><span class="t">%s</span>' % (r)
   
   print '<div id="pick">'
   for d in alldata[amk][r][0]:
     print '<div class="pstop">'
-    print '''<a href="#" onclick="pSel('{}','{}',this);return false">'''.format(r, d[0])
-    print '<span class="st">{}</span>'.format(d[1])
+    print '''<a href="#" onclick="pSel('%s','%s',this);return false">''' % (r, d[0])
+    print '<span class="st">%s</span>' % (d[1])
     if m:
-      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center={},{}&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C{},{}&key={}"/>'.format(
+      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C%s,%s&key=%s"/>' % (
         d[2], d[3], d[2], d[3], shconstants.GKEY
       )
     print '</a></div>'  
@@ -145,10 +145,10 @@ for r in routes:
   print '<div id="drop">'
   for d in alldata[amk][r][1]:
     print '<div class="dstop">'
-    print '''<a href="#" onclick="dSel('{}','{}',this);return false">'''.format(r, d[0])
-    print '<span class="st">{}</span>'.format(d[1])
+    print '''<a href="#" onclick="dSel('%s','%s',this);return false">''' % (r, d[0])
+    print '<span class="st">%s</span>' % (d[1])
     if m:
-      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center={},{}&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C{},{}&key={}"/>'.format(
+      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C%s,%s&key=%s"/>' % (
         d[2], d[3], d[2], d[3], shconstants.GKEY
       )
     print '</a></div>'  

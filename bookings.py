@@ -30,11 +30,11 @@ bookings = shuttle.get_bookings()
 
 print '''<html>
 <head>
-<title>Connector bookings for {}</title>
+<title>Connector bookings for %s</title>
 <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-'''.format(u)
+''' % (u)
 
 alldata = json.load(open("all.json"))
 routes = list(alldata["true"].keys()) + list(alldata["false"].keys())
@@ -49,34 +49,34 @@ print '''<div id="newbar">
 '''
 for f in freq:
   print '''<div class="newbutton">
-  <a href="new.py?k={}&r={}" class="l">{}</a>
-  <a href="new.py?k={}&r={}&m=1" class="m">m</a>
+  <a href="new.py?k=%s&r=%s" class="l">%s</a>
+  <a href="new.py?k=%s&r=%s&m=1" class="m">m</a>
   </div>
-  '''.format(key, f[0], f[0], key, f[0])
+  ''' % (key, f[0], f[0], key, f[0])
 
 print '</div>'
 
 if 'cal' in form:
   cal = form.getvalue("cal")
   print '''<div id="outlook">
-  <a href="outlook.py?k={}&cal={}">download booked trip</a>
-  </div>'''.format(key, cal)
+  <a href="outlook.py?k=%s&cal=%s">download booked trip</a>
+  </div>''' % (key, cal)
 
 print '<div id="bookings">'
 
 for b in bookings:
   dt = datetime.datetime.strptime(b[1], "%m/%d/%Y")
   print '''<div class="booking">
-<span class="t">{}</span>
-<span class="r">{}</span>
-<span class="d">{}, {}</span>
-<span class="g">{}, {}</span>
+<span class="t">%s</span>
+<span class="r">%s</span>
+<span class="d">%s, %s</span>
+<span class="g">%s, %s</span>
 <form method="post">
 <input type="hidden" name="action" value="cancel"/>
-<input type="hidden" name="id" value="{}"/>
+<input type="hidden" name="id" value="%s"/>
 <input type="submit" value="cancel"/>
 </form>
 </div>
-'''.format(dt.strftime("%A, %b %-d"), b[0], b[4], b[3], b[6], b[5], b[2])
+''' % (dt.strftime("%A, %b %-d"), b[0], b[4], b[3], b[6], b[5], b[2])
 
 print '</div></body></html>'

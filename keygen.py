@@ -17,11 +17,11 @@ if 'user' in form and 'pass' in form:
   p = form.getvalue("pass")
   k = shuttle.generate_key(u, p)
   print 'ready to bookmark:\n'
-  print '<a href="http://{}{}/bookings.py?k={}">bookings</a>\n'.format(
-    os.environ["SERVER_NAME"], os.path.dirname(os.environ["SCRIPT_NAME"]),
+  print '<a href="%s%s/bookings.py?k=%s">bookings</a>\n' % (
+    os.environ["HTTP_ORIGIN"], os.path.dirname(os.environ["SCRIPT_NAME"]),
     k)
-  print '<a href="http://{}{}/new.py?k={}">new booking</a>\n'.format(
-    os.environ["SERVER_NAME"], os.path.dirname(os.environ["SCRIPT_NAME"]),
+  print '<a href="%s%s/new.py?k=%s">new booking</a>\n' % (
+    os.environ["HTTP_ORIGIN"], os.path.dirname(os.environ["SCRIPT_NAME"]),
     k)
 else:
   print '''

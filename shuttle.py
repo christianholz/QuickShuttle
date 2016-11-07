@@ -28,7 +28,7 @@ def date_today():
   dt = datetime.date.today()
   while dt.weekday() > 4:
     dt += datetime.timedelta(1, 0)
-  ds = "{}/{}/{}".format(dt.month, dt.day, dt.year)
+  ds = "%d/%d/%d" % (dt.month, dt.day, dt.year)
   return ds
 
 
@@ -36,7 +36,7 @@ def date_tomorrow():
   dt = datetime.date.today() + datetime.timedelta(1, 0)
   while dt.weekday() > 4:
     dt += datetime.timedelta(1, 0)
-  ds = "{}/{}/{}".format(dt.month, dt.day, dt.year)
+  ds = "%d/%d/%d" % (dt.month, dt.day, dt.year)
   return ds
 
 
