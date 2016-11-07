@@ -150,7 +150,7 @@ def cancel_booking(id):
     ('Accept-Encoding', 'gzip, deflate, br'),
     ('Accept-Language', 'en-US,en;q=0.8')
   ]
-  r = opener.open(URL_CANCEL_MOBILE, urllib.urlencode({
+  r = opener.open(shconstants.URL_CANCEL_MOBILE, urllib.urlencode({
     "id": id
   }))
   s = r.read()

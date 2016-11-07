@@ -19,10 +19,13 @@ key = form.getvalue("k")
 if form.getvalue("am") == "1":
   am = True
   amk = "true"
+  ams = " AM"
 else:
   am = False
   amk = "false"
+  ams = " PM"
 dt = form.getvalue("dt")
+dtt = datetime.datetime.strptime(dt, "%m/%d/%Y")
 route = form.getvalue("r")
 pick = form.getvalue("p")
 drop = form.getvalue("d")
@@ -86,6 +89,7 @@ print '<div id="newbar">'
 print '<a href="bookings.py?k=%s">bookings</a>' % (key)
 print '</div>'
 
+print '<div id="info">%s%s</div>' % (dtt.strftime("%a, %m/%-d"), ams)
 
 alldata = json.load(open("all.json"))
 
