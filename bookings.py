@@ -8,7 +8,7 @@ import cgi
 import datetime
 import json
 import shuttle
-import shcontants
+import shconstants
 
 print "Content-type: text/html\r\n"
 

@@ -9,7 +9,7 @@ import datetime
 import json
 import urllib
 import shuttle
-import shcontants
+import shconstants
 
 
 print "Content-type: text/html\r\n"
@@ -31,14 +31,6 @@ if 'action' in form:
   if act == "cancel":
     id = form.getvalue("id")
     shuttle.cancel_booking(id)
-
-print '''<html>
-<head>
-<title>New booking for {}</title>
-<link href="style.css" rel="stylesheet" />
-</head>
-<body>
-'''.format(u)
 
 if 'dt' in form:
   dt = datetime.datetime.strptime(form.getvalue("dt"), "%m/%d/%Y")
@@ -64,8 +56,10 @@ else:
     
 if 'm' in form:
   m = True
+  mk = "1"
 else:
   m = False
+  mk = "0"
   
 if 'r' in form:
   r = form.getvalue("r")
@@ -78,6 +72,25 @@ if am:
 else:
   ams = " PM"
   amk = "false"
+
+
+print '''<html>
+<head>
+<title>New booking for {}</title>
+<link href="style.css" rel="stylesheet" />
+'''.format(u)
+
+print '''<script>rid='';pid='';did='';
+function pSel(r,d,e){{rid=r;pid=d;e.parentElement.style.backgroundColor="red";nav();}}
+function dSel(r,d,e){{rid=r;did=d;e.parentElement.style.backgroundColor="red";nav();}}
+function nav(){{if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?k={}&dt={}&am={}&m={}&r="+rid+"&p="+pid+"&d="+did;}}
+</script>
+'''.format(key, dt.strftime("%m/%-d/%Y"), amk, mk)
+
+print '''</head>
+<body>
+'''
+
 
 alldata = json.load(open("all.json"))
 routes = list(alldata[amk].keys())
@@ -120,7 +133,7 @@ for r in routes:
   print '<div id="pick">'
   for d in alldata[amk][r][0]:
     print '<div class="pstop">'
-    print '''<a href="#" onclick="pickSelect('{}','{}');return false">'''.format(r, d[0])
+    print '''<a href="#" onclick="pSel('{}','{}',this);return false">'''.format(r, d[0])
     print '<span class="st">{}</span>'.format(d[1])
     if m:
       print '<img src="https://maps.googleapis.com/maps/api/staticmap?center={},{}&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C{},{}&key={}"/>'.format(
@@ -132,7 +145,7 @@ for r in routes:
   print '<div id="drop">'
   for d in alldata[amk][r][1]:
     print '<div class="dstop">'
-    print '''<a href="#" onclick="dropSelect('{}','{}');return false">'''.format(r, d[0])
+    print '''<a href="#" onclick="dSel('{}','{}',this);return false">'''.format(r, d[0])
     print '<span class="st">{}</span>'.format(d[1])
     if m:
       print '<img src="https://maps.googleapis.com/maps/api/staticmap?center={},{}&zoom=12&size=100x100&maptype=roadmap%20&markers=size:tiny%7C%7C{},{}&key={}"/>'.format(

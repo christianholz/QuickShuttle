@@ -31,4 +31,6 @@ else:
   <input type="submit" value="submit" />
 </form>'''
 
-print '</pre>'
+print '''
+</pre>
+'''
