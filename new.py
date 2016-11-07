@@ -83,9 +83,9 @@ print '''<html>
 print '''<script>rid='';pid='';did='';
 function pSel(r,d,e){rid=r;pid=d;e.parentElement.style.backgroundColor="red";nav();}
 function dSel(r,d,e){rid=r;did=d;e.parentElement.style.backgroundColor="red";nav();}
-function nav(){if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?k=%s&dt=%s&am=%s&m=%s&r="+rid+"&p="+pid+"&d="+did;}
+function nav(){if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?k=%s&dt=%s&am=%d&m=%s&r="+rid+"&p="+pid+"&d="+did;}
 </script>
-''' % (key, dt.strftime("%m/%-d/%Y"), amk, mk)
+''' % (key, dt.strftime("%m/%-d/%Y"), int(am), mk)
 
 print '''</head>
 <body>
@@ -138,8 +138,8 @@ for r in routes:
     print '''<a href="#" onclick="pSel('%s','%s',this);return false">''' % (r, d[0])
     print '<span class="st">%s</span>' % (d[1])
     if m:
-      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
-        d[2], d[3], d[2], d[3], shconstants.GKEY
+      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=%dx%d&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
+        d[2], d[3], shconstants.MAP_W, shconstants.MAP_H, d[2], d[3], shconstants.GKEY
       )
     print '</a></div>'  
   print '</div>'
@@ -150,8 +150,8 @@ for r in routes:
     print '''<a href="#" onclick="dSel('%s','%s',this);return false">''' % (r, d[0])
     print '<span class="st">%s</span>' % (d[1])
     if m:
-      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
-        d[2], d[3], d[2], d[3], shconstants.GKEY
+      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=%dx%d&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
+        d[2], d[3], shconstants.MAP_W, shconstants.MAP_H, d[2], d[3], shconstants.GKEY
       )
     print '</a></div>'  
   print '</div>'

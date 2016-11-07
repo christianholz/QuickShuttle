@@ -99,12 +99,13 @@ for d in alldata[amk][route][1]:
     break
 
 print '''<div id="route_info">
+<span class="t">%s</span>
 <div id="pick">
 <div class="pstop">
-<span class="st">%s</span>''' % (pi[0])
+<span class="st">%s</span>''' % (route, pi[0])
 if m:
-  print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
-    pi[1], pi[2], pi[1], pi[2], shconstants.GKEY
+  print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=%dx%d&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
+    pi[1], pi[2], shconstants.MAP_W, shconstants.MAP_H, pi[1], pi[2], shconstants.GKEY
   )
 print '''</div>
 </div>
@@ -112,8 +113,8 @@ print '''</div>
 <div class="dstop">
 <span class="st">%s</span>''' % (di[0])
 if m:
-  print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=100x100&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
-    di[1], di[2], di[1], di[2], shconstants.GKEY
+  print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=%dx%d&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
+    di[1], di[2], shconstants.MAP_W, shconstants.MAP_H, di[1], di[2], shconstants.GKEY
   )
 print '''</div>
 </div>'''
