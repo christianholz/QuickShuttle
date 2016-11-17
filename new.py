@@ -80,12 +80,25 @@ print '''<html>
 <link href="style.css" rel="stylesheet" />
 ''' % (u)
 
-print '''<script>rid='';pid='';did='';
-function pSel(r,d,e){rid=r;pid=d;e.parentElement.style.backgroundColor="red";nav();}
-function dSel(r,d,e){rid=r;did=d;e.parentElement.style.backgroundColor="red";nav();}
-function nav(){if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?k=%s&dt=%s&am=%d&m=%s&r="+rid+"&p="+pid+"&d="+did;}
+print '''<script>
+window.onload=function(){
+  var l=document.getElementsByTagName('a');
+  for(var i=0;i!=l.length;++i) {
+    l[i].href+="&k=%s";
+  }
+}
+rid='';pid='';did='';
+function pSel(r,d,e){pid=d;nav(r,e);}
+function dSel(r,d,e){did=d;nav(r,e);}
+function nav(r,e){rid=r;
+	var ch=e.parentElement.parentElement.children;
+	for(var i=0;i!=ch.length;++i){
+		ch[i].classList.remove("sel");
+	}
+	e.parentElement.classList.add("sel");
+	if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?k=%s&dt=%s&am=%d&m=%s&r="+rid+"&p="+pid+"&d="+did;}
 </script>
-''' % (key, dt.strftime("%m/%-d/%Y"), int(am), mk)
+''' % (key, key, dt.strftime("%m/%-d/%Y"), int(am), mk)
 
 print '''</head>
 <body>
@@ -96,14 +109,20 @@ alldata = json.load(open("all.json"))
 routes = list(alldata[amk].keys())
 routes.sort()
 
+
+# header
+
 fk = {}
 for k in form.keys():
-  fk[k] = form.getvalue(k)
-print '<div id="newbar">'
-fk["am"] = "1"
-print '<a href="%s?%s">am</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
-fk["am"] = "0"
-print '<a href="%s?%s">pm</a> |' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
+  if k != "k":
+    fk[k] = form.getvalue(k)
+print '<div id="newbar"><div id="newbarin">'
+if not am:
+  fk["am"] = "1"
+  print '<a href="%s?%s">am</a><span class="s">|</span>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
+else:
+  fk["am"] = "0"
+  print '<a href="%s?%s">pm</a><span class="s">|</span>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
 
 dn = dt
 for i in range(5):
@@ -112,11 +131,15 @@ for i in range(5):
     dn += datetime.timedelta(1, 0)
   fk["dt"] = dn.strftime("%m/%-d/%Y")
   fk["am"] = "1"
-  print ' <a href="%s?%s">%s am</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk), dn.strftime("%a, %m/%-d"))
+  print '<a href="%s?%s">%s am</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk), dn.strftime("%a, %m/%-d"))
   fk["am"] = "0"
-  print ' <a href="%s?%s">pm</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
-print '</div>'
+  print '<a href="%s?%s">pm</a>' % (os.environ["SCRIPT_NAME"], urllib.urlencode(fk))
+print '</div></div>'
 
+
+# routes
+
+print '<div id="info">%s%s</div>' % (dt.strftime("%a, %m/%-d"), ams)
 print '<div id="routes">'
 
 try:
@@ -125,14 +148,12 @@ try:
 except:
   pass
 
-print '<div id="info">%s%s</div>' % (dt.strftime("%a, %m/%-d"), ams)
-
 blu = {False: "0", True: "1"}
 
 for r in routes:
   print '<div class="route"><span class="t">%s</span>' % (r)
   
-  print '<div id="pick">'
+  print '<div class="pick">'
   for d in alldata[amk][r][0]:
     print '<div class="pstop">'
     print '''<a href="#" onclick="pSel('%s','%s',this);return false">''' % (r, d[0])
@@ -144,7 +165,7 @@ for r in routes:
     print '</a></div>'  
   print '</div>'
 
-  print '<div id="drop">'
+  print '<div class="drop">'
   for d in alldata[amk][r][1]:
     print '<div class="dstop">'
     print '''<a href="#" onclick="dSel('%s','%s',this);return false">''' % (r, d[0])

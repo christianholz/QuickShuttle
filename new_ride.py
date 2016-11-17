@@ -85,11 +85,17 @@ if error_msg != "":
   print '<div id="error">%s</div>' % (error_msg)
 
 
-print '<div id="newbar">'
-print '<a href="bookings.py?k=%s">bookings</a>' % (key)
-print '</div>'
+# navigation
+
+print '<div id="newbar"><div id="newbarin">'
+print '<span class="newbutton"><a href="bookings.py?k=%s">bookings</a></span>' % (key)
+print '<span class="newbutton"><a href="bookings.py?k=%s">bookings</a></span>' % (key)
+print '</div></div>'
 
 print '<div id="info">%s%s</div>' % (dtt.strftime("%a, %m/%-d"), ams)
+
+
+# all route times
 
 alldata = json.load(open("all.json"))
 
@@ -102,9 +108,10 @@ for d in alldata[amk][route][1]:
     di = [d[1], d[2], d[3]]
     break
 
-print '''<div id="route_info">
+print '''<div id="routes">
+<div class="route">
 <span class="t">%s</span>
-<div id="pick">
+<div class="pick">
 <div class="pstop">
 <span class="st">%s</span>''' % (route, pi[0])
 if m:
@@ -113,7 +120,7 @@ if m:
   )
 print '''</div>
 </div>
-<div id="drop">
+<div class="drop">
 <div class="dstop">
 <span class="st">%s</span>''' % (di[0])
 if m:
@@ -146,10 +153,13 @@ print '<div id="times">'
 for t in times:
   if t[3] != "0":
     fk["t"] = t[0]
-    print '<div class="ride"><a href="%s?%s">%s => %s</a></div>' % (
+    print '<div class="slot"><a href="%s?%s">%s => %s</a></div>' % (
       os.environ["SCRIPT_NAME"], urllib.urlencode(fk), t[1], t[2]
     )
+if len(times) == 0:
+  print '<div class="slot"><span class="nr">no available ride found</span></div>'
 print '''</div>
+</div>
 </div>
 </body>
 </html>

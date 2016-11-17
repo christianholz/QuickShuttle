@@ -1,0 +1,157 @@
+html,body{background-color:#fff;color:#333;margin:0;padding:0;font:10pt/13pt Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%;}
+body {
+	margin: 5px;
+	padding: 50px 0 0 0;
+}
+
+#newbar {
+	height: 40px;
+	width: 100%;
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding: 5px 0 0 10px;
+	z-index: 5;
+	background-color: #fff;
+}
+
+#newbarin {
+	height:60px;
+	overflow-x: scroll;
+    overflow-y: hidden;
+    white-space:nowrap;
+    -webkit-overflow-scrolling:touch;
+}
+
+#newbar a, #newbar .s {
+	margin: 0 10px 0 0;
+	padding: 10px 0;
+	display: inline-block;
+}
+
+.booking {
+	border: solid #ccc 1px;
+	background-color: #eee;
+	margin: 0 0 10px 0;
+	padding: 5px 60px 5px 5px;
+	position: relative;
+}
+
+.pm {
+	background-color: #ccc;
+}
+
+.booking span {
+	display: block;
+}
+
+.booking form {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.booking input {
+	width: 100px;
+	height: 40px;
+	font-size:10pt;
+}
+
+.booking .t {
+	font-weight: bold;
+}
+
+.booking .r {
+	position: absolute;
+	top: 5px;
+	left: 140px;
+}
+
+.booking .d {
+	margin-top: 5px;
+}
+
+#info {
+	padding: 10px 5px;
+	background-color: rgba(255,255,255,0.7);
+	position: fixed;
+	width: 100%;
+	top: 45px;
+	z-index: 1;
+}
+
+#routes {
+	margin: 30px 0 0 0;
+}
+
+.route {
+	background-color: #eee;
+	border: 1px solid #ccc;
+	padding: 5px 5px;
+	margin: 5px 0 0 0;
+	overflow: hidden;
+}
+
+.route .t {
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+	font-weight: bold;
+}
+
+.route .st {
+	display: block;
+}
+
+.route .pick {
+	text-align:right;
+	width: 50%;
+	float: left;
+	position: relative;
+	left: -30px;
+}
+
+.route .drop {
+	position: relative;
+	left: 30px;
+	overflow: hidden;
+}
+
+.route a {
+	color: #333;
+	text-decoration: none;
+}
+
+
+.route .pstop {
+	padding: 5px 5px 5px 0;
+	margin: 10px 0 0 0;
+}
+
+.route .dstop {
+	padding: 5px 0px 5px 5px;
+	margin: 10px 0 0 0;
+}
+
+.route .sel {
+	background-color: #ccc;
+}
+
+#times {
+	text-align: center;
+	margin: 0 0 15px 0;
+}
+
+.slot {
+	margin: 0 auto;
+	width: 270px;
+}
+
+.slot a, .slot .nr {
+	display: block;
+	width: 200px;
+	padding: 30px 35px;
+	margin: 20px 0 0 0;
+	background-color: #ccc;
+}

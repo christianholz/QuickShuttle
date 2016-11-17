@@ -46,19 +46,25 @@ freq = list(freq.items())
 freq.sort()
 freq.sort(lambda x, y:y[1] - x[1])
 
-print '<div id="newbar">'
+
+# header bar
+
+print '<div id="newbar"><div id="newbarin">'
 
 for f in freq:
   if f[1] != 0:
     a = ' freq'
   else:
     a = ''
-  print '''<div class="newbutton">
+  print '''<span class="newbutton">
   <a href="new.py?k=%s&r=%s" class="l%s">%s</a>
   <a href="new.py?k=%s&r=%s&m=1" class="m%s">m</a>
-</div>''' % (key, f[0], a, f[0], key, f[0], a)
+</span>''' % (key, f[0], a, f[0], key, f[0], a)
 
-print '</div>'
+print '</div></div>'
+
+
+# list of rides
 
 if 'cal' in form:
   cal = form.getvalue("cal")
@@ -70,17 +76,21 @@ print '<div id="bookings">'
 
 for b in bookings:
   dt = datetime.datetime.strptime(b[1], "%m/%d/%Y")
-  print '''<div class="booking">
+  if dt.hour > 13:
+    csspm = " pm"
+  else:
+    csspm = ""
+  print '''<div class="booking%s">
   <span class="t">%s</span>
   <span class="r">%s</span>
-  <span class="d">%s, %s</span>
-  <span class="g">%s, %s</span>
+  <span class="dt">%s</span><span class="dl">%s</span>
+  <span class="gt">%s</span><span class="gl">%s</span>
   <form method="post" action="%s?k=%s">
   <input type="hidden" name="action" value="cancel"/>
   <input type="hidden" name="id" value="%s"/>
   <input type="submit" value="cancel"/>
   </form>
-</div>''' % (dt.strftime("%A, %b %-d"), b[0], b[4], b[3], b[6], b[5], 
-  os.environ["SCRIPT_NAME"], key, b[2])
+</div>''' % (csspm, dt.strftime("%A, %b %-d"), b[0], b[4], b[3],
+  b[6], b[5], os.environ["SCRIPT_NAME"], key, b[2])
 
 print '</div></body></html>'
