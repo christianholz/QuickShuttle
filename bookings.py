@@ -10,16 +10,13 @@ import json
 import shuttle
 import shconstants
 
+import shcookie
+
 print "Content-type: text/html\r\n"
 
+shuttle.do_login(shcookie.u, shcookie.p)
+
 form = cgi.FieldStorage()
-if 'k' not in form:
-  sys.exit()
-key = form.getvalue("k")
-
-u, p = shuttle.extract_credentials(key)
-shuttle.do_login(u, p)
-
 if 'action' in form:
   act = form.getvalue("action")
   if act == "cancel":
@@ -33,7 +30,7 @@ print '''<html>
 <title>Connector bookings for %s</title>
 <link href="style.css" rel="stylesheet" />
 </head>
-<body>''' % (u)
+<body>''' % (shcookie.u)
 
 alldata = json.load(open("all.json"))
 routes = list(alldata["true"].keys()) + list(alldata["false"].keys())
@@ -57,9 +54,9 @@ for f in freq:
   else:
     a = ''
   print '''<span class="newbutton">
-  <a href="new.py?k=%s&r=%s" class="l%s">%s</a>
-  <a href="new.py?k=%s&r=%s&m=1" class="m%s">m</a>
-</span>''' % (key, f[0], a, f[0], key, f[0], a)
+  <a href="new.py?r=%s" class="l%s">%s</a>
+  <a href="new.py?r=%s&m=1" class="m%s">m</a>
+</span>''' % (f[0], a, f[0], f[0], a)
 
 print '</div></div>'
 
@@ -69,8 +66,8 @@ print '</div></div>'
 if 'cal' in form:
   cal = form.getvalue("cal")
   print '''<div id="outlook">
-  <a href="outlook.py?k=%s&cal=%s">download booked trip</a>
-</div>''' % (key, cal)
+  <a href="outlook.py?cal=%s">download booked trip</a>
+</div>''' % (cal)
 
 print '<div id="bookings">'
 
@@ -85,12 +82,12 @@ for b in bookings:
   <span class="r">%s</span>
   <span class="dt">%s</span><span class="dl">%s</span>
   <span class="gt">%s</span><span class="gl">%s</span>
-  <form method="post" action="%s?k=%s">
+  <form method="post" action="%s">
   <input type="hidden" name="action" value="cancel"/>
   <input type="hidden" name="id" value="%s"/>
   <input type="submit" value="cancel"/>
   </form>
 </div>''' % (csspm, dt.strftime("%A, %b %-d"), b[0], b[4], b[3],
-  b[6], b[5], os.environ["SCRIPT_NAME"], key, b[2])
+  b[6], b[5], os.environ["SCRIPT_NAME"], b[2])
 
 print '</div></body></html>'

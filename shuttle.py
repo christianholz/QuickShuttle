@@ -12,6 +12,8 @@ import base64
 import struct
 import md5
 import shconstants
+import os
+import PIL.Image
 
 
 handler = urllib2.HTTPSHandler(debuglevel=0)
@@ -473,6 +475,29 @@ def download_all_full():
       all_routes[isAM][r[1]] = s
   json.dump(all_routes, open("all.json", "w"))
   
+
+def download_map_tiles():
+  tm = ["true", "false"]
+  routes = json.load(open("all.json"))
+  dl = []
+  if not os.path.exists(shconstants.STOPS_DIR):
+    os.mkdir(shconstants.STOPS_DIR)
+  for am in tm:
+    for route in routes[am].items():
+      for stop in route[1][0] + route[1][1]:
+        sid = int(stop[0])
+        if not sid in dl:
+          print "downloading stop %s (%s) for %s" % (stop[0], stop[1], route[0])
+          r = urllib2.urlopen("https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=%dx%d&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s" % (
+            stop[2], stop[3], shconstants.MAP_W, shconstants.MAP_H + 40, stop[2], stop[3], shconstants.GKEY))
+          f = open(os.path.join(shconstants.STOPS_DIR, "stop-%s.png" % stop[0]), "wb")
+          f.write(r.read())
+          f.close()
+          img = PIL.Image.open(os.path.join(shconstants.STOPS_DIR, "stop-%s.png" % stop[0]))
+          nig = img.crop((0, 20, shconstants.MAP_W, shconstants.MAP_H + 20))
+          nig.save(os.path.join(shconstants.STOPS_DIR, "stop-%s.png" % stop[0]))
+          dl.append(sid)
+
 
 def generate_key(user, pw):
   l = len(user)

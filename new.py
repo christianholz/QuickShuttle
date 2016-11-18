@@ -11,25 +11,22 @@ import urllib
 import shuttle
 import shconstants
 
+import shcookie
+
 
 print "Content-type: text/html\r\n"
 
 form = cgi.FieldStorage()
-if 'k' not in form:
-  sys.exit()
-key = form.getvalue("k")
-
 if 'm' in form:
   m = True
 else:
   m = False
 
-u, p = shuttle.extract_credentials(key)
-
 if 'action' in form:
   act = form.getvalue("action")
   if act == "cancel":
     id = form.getvalue("id")
+    shuttle.do_login(shcookie.u, shcookie.p)
     shuttle.cancel_booking(id)
 
 if 'dt' in form:
@@ -78,15 +75,9 @@ print '''<html>
 <head>
 <title>New booking for %s</title>
 <link href="style.css" rel="stylesheet" />
-''' % (u)
+''' % (shcookie.u)
 
 print '''<script>
-window.onload=function(){
-  var l=document.getElementsByTagName('a');
-  for(var i=0;i!=l.length;++i) {
-    l[i].href+="&k=%s";
-  }
-}
 rid='';pid='';did='';
 function pSel(r,d,e){pid=d;nav(r,e);}
 function dSel(r,d,e){did=d;nav(r,e);}
@@ -96,9 +87,9 @@ function nav(r,e){rid=r;
 		ch[i].classList.remove("sel");
 	}
 	e.parentElement.classList.add("sel");
-	if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?k=%s&dt=%s&am=%d&m=%s&r="+rid+"&p="+pid+"&d="+did;}
+	if(rid!=''&&pid!=''&&did!='')location.href="new_ride.py?dt=%s&am=%d&m=%s&r="+rid+"&p="+pid+"&d="+did;}
 </script>
-''' % (key, key, dt.strftime("%m/%-d/%Y"), int(am), mk)
+''' % (dt.strftime("%m/%-d/%Y"), int(am), mk)
 
 print '''</head>
 <body>
@@ -114,8 +105,7 @@ routes.sort()
 
 fk = {}
 for k in form.keys():
-  if k != "k":
-    fk[k] = form.getvalue(k)
+  fk[k] = form.getvalue(k)
 print '<div id="newbar"><div id="newbarin">'
 if not am:
   fk["am"] = "1"
@@ -159,9 +149,7 @@ for r in routes:
     print '''<a href="#" onclick="pSel('%s','%s',this);return false">''' % (r, d[0])
     print '<span class="st">%s</span>' % (d[1])
     if m:
-      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=%dx%d&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
-        d[2], d[3], shconstants.MAP_W, shconstants.MAP_H, d[2], d[3], shconstants.GKEY
-      )
+      print '<img src="%s/stop-%s.png" />' % (shconstants.STOPS_DIR, d[0])
     print '</a></div>'  
   print '</div>'
 
@@ -171,9 +159,7 @@ for r in routes:
     print '''<a href="#" onclick="dSel('%s','%s',this);return false">''' % (r, d[0])
     print '<span class="st">%s</span>' % (d[1])
     if m:
-      print '<img src="https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=%dx%d&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s"/>' % (
-        d[2], d[3], shconstants.MAP_W, shconstants.MAP_H, d[2], d[3], shconstants.GKEY
-      )
+      print '<img src="%s/stop-%s.png" />' % (shconstants.STOPS_DIR, d[0])
     print '</a></div>'  
   print '</div>'
   
