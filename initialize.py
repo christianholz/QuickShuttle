@@ -2,6 +2,6 @@
 
 import shuttle
 
-shuttle.do_login_full("USER", "PASS")
+shuttle.do_login_full("USER", "PASSWORD")
 shuttle.download_all_full()
 shuttle.download_map_tiles()
