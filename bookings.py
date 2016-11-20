@@ -33,30 +33,27 @@ print '''<html>
 <body>''' % (shcookie.u)
 
 alldata = json.load(open("all.json"))
-routes = list(alldata["true"].keys()) + list(alldata["false"].keys())
-freq = {}
-for v in routes:
-  freq[v[:-3]] = 0
-for b in bookings:
-  freq[b[0][:-3]] += 1
-freq = list(freq.items())
-freq.sort()
-freq.sort(lambda x, y:y[1] - x[1])
+routes = [r[:-3] for r in alldata["true"].keys()]
+routes.sort()
+routes = [[r, alldata["true"][r + " AM"][2]] for r in routes]
+# freq = {}
+# for v in routes:
+#   freq[v[:-3]] = 0
+# for b in bookings:
+#   freq[b[0][:-3]] += 1
+# freq = list(freq.items())
+# freq.sort()
+# freq.sort(lambda x, y:y[1] - x[1])
 
 
 # header bar
 
 print '<div id="newbar"><div id="newbarin">'
 
-for f in freq:
-  if f[1] != 0:
-    a = ' freq'
-  else:
-    a = ''
+for r in routes:
   print '''<span class="newbutton">
-  <a href="new.py?r=%s" class="l%s">%s</a>
-  <a href="new.py?r=%s&m=1" class="m%s">m</a>
-</span>''' % (f[0], a, f[0], f[0], a)
+  <a href="new.py?r=%s" class="l">%s</a>
+</span>''' % (r[1], r[0])
 
 print '</div></div>'
 

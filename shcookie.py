@@ -3,6 +3,7 @@
 """verifies existence of cookie and otherwise shows redirect"""
 
 import os
+import sys
 import cgi
 import shuttle
 import Cookie

@@ -13,7 +13,9 @@ import struct
 import md5
 import shconstants
 import os
-import PIL.Image
+import sys
+if sys.stdin.isatty():
+  import PIL.Image
 
 
 handler = urllib2.HTTPSHandler(debuglevel=0)
@@ -317,8 +319,10 @@ def download_ics_full(cal):
   return r
 
 
-def get_routes_full(isAM):
-  r = get_trips_full(isAM, date_today(), "0", "0", "0", "0", handler, cj)
+def get_routes_full(isAM, dt=None):
+  if dt == None:
+    dt = date_today()
+  r = get_trips_full(isAM, dt, "0", "0", "0", "0")
   s = r.read()
   
   rg = re.compile('jQuery\("#DropDownList"\).*?"dataSource":(.*?),[ ]?"dataTextField"')
@@ -328,7 +332,7 @@ def get_routes_full(isAM):
     if len(m):
       routes = json.loads(m[0])
       break
-  return [[r["ID"], r["Name"]] for r in routes]
+  return [[r["ID"], r["Name"], r["RouteMasterID"], r["Description"]] for r in routes]
 
 
 def get_routes(isAM, dt):
@@ -381,8 +385,10 @@ def get_stops_for(isAM, routeID):
   return stops
 
 
-def get_stop_locations_full(isAM, routeID):
-  r = get_trips_full(isAM, date_today(), routeID, "NaN", "NaN", "NaN", handler, cj)
+def get_stop_locations_full(isAM, routeID, dt=None):
+  if dt == None:
+    dt = date_today()
+  r = get_trips_full(isAM, dt, routeID, "NaN", "NaN", "NaN")
   s = r.read()
   
   rg1 = re.compile('jQuery\("#DropDownListPick"\).*?"dataSource":(.*?),[ ]?"dataTextField"')
@@ -439,7 +445,7 @@ def get_times(isAM, date, routeID, pickID, dropID):
 
 
 def get_times_full(isAM, date, routeID, pickID, dropID):
-  r = get_trips_full(isAM, date, routeID, pickID, dropID, "NaN", handler, cj)
+  r = get_trips_full(isAM, date, routeID, pickID, dropID, "NaN")
   s = r.read()
   
   rg = re.compile('<input id="rbScheds" name="rbScheds" type="radio" value="([0-9]+)" />')
@@ -466,12 +472,13 @@ def download_all_full():
   all_routes = {}
   morning = [True, False]
   for isAM in morning:
-    print "downloading for morning = " + isAM
-    routes = get_routes_full(isAM, handler, cj)
+    print "downloading for morning = " + str(isAM)
+    routes = get_routes_full(isAM, dt='11/28/2016')
     all_routes[isAM] = {}
     for j, r in enumerate(routes):
       print "  downloading stops for " + r[1] + " (%d/%d)" % (j + 1, len(routes))
-      s = get_stop_locations_full(isAM, r[0], handler, cj)
+      s = get_stop_locations_full(isAM, r[0], dt='11/28/2016')
+      s.extend(r[2:4])
       all_routes[isAM][r[1]] = s
   json.dump(all_routes, open("all.json", "w"))
   
@@ -490,14 +497,24 @@ def download_map_tiles():
           print "downloading stop %s (%s) for %s" % (stop[0], stop[1], route[0])
           r = urllib2.urlopen("https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=12&size=%dx%d&maptype=roadmap%%20&markers=size:tiny%%7C%%7C%s,%s&key=%s" % (
             stop[2], stop[3], shconstants.MAP_W, shconstants.MAP_H + 40, stop[2], stop[3], shconstants.GKEY))
-          f = open(os.path.join(shconstants.STOPS_DIR, "stop-%s.png" % stop[0]), "wb")
+          f = open(os.path.join(shconstants.STOPS_DIR, "stop-%s.jpg" % stop[0]), "wb")
           f.write(r.read())
           f.close()
-          img = PIL.Image.open(os.path.join(shconstants.STOPS_DIR, "stop-%s.png" % stop[0]))
+          img = PIL.Image.open(os.path.join(shconstants.STOPS_DIR, "stop-%s.jpg" % stop[0]))
           nig = img.crop((0, 20, shconstants.MAP_W, shconstants.MAP_H + 20))
-          nig.save(os.path.join(shconstants.STOPS_DIR, "stop-%s.png" % stop[0]))
+          nig.convert("RGB").save(os.path.join(shconstants.STOPS_DIR, "stop-%s.jpg" % stop[0]), "JPEG", quality=70, optimize=True, progressive=True)
           dl.append(sid)
 
+
+def pencode(d):
+  if len(d) == 0:
+    return ""
+  it = d.items()
+  s = "%s=%s" % (it[0][0], it[0][1])
+  for i in range(1, len(it)):
+    s += "&%s=%s" % (it[i][0], it[i][1])
+  return s
+  
 
 def generate_key(user, pw):
   l = len(user)
