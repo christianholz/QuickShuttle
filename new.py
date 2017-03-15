@@ -56,6 +56,7 @@ else:
 print '''<html>
 <head>
 <title>New booking for %s</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <link href="style.css" rel="stylesheet" />
 ''' % (shcookie.u)
 

@@ -18,7 +18,7 @@ if 'k' not in form or 'cal' not in form:
 key = form.getvalue("k")
 cal = form.getvalue("cal")
 
-u, p = shuttle.extract_credentials(key)
+u, p, rid = shuttle.extract_credentials(key)
 shuttle.do_login_full(u, p)
 r = shuttle.download_ics_full(cal)
 

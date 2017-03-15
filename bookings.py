@@ -9,6 +9,7 @@ import datetime
 import json
 import shuttle
 import shconstants
+import smtplib
 
 import shcookie
 
@@ -23,11 +24,13 @@ if 'action' in form:
     id = form.getvalue("id")
     shuttle.cancel_booking(id)
 
+show_all_routes = 'ar' in form
 bookings = shuttle.get_bookings()
 
 print '''<html>
 <head>
 <title>Connector bookings for %s</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <link href="style.css" rel="stylesheet" />
 </head>
 <body>''' % (shcookie.u)
@@ -35,7 +38,7 @@ print '''<html>
 alldata = json.load(open("all.json"))
 routes = [r[:-3] for r in alldata["true"].keys()]
 routes.sort()
-routes = [[r, alldata["true"][r + " AM"][2]] for r in routes]
+routes = [[r, alldata["true"][r + " AM"][2]] for r in routes if len(shcookie.routes) == 0 or show_all_routes or alldata["true"][r + " AM"][2] in shcookie.routes]
 # freq = {}
 # for v in routes:
 #   freq[v[:-3]] = 0
@@ -54,7 +57,8 @@ for r in routes:
   print '''<span class="newbutton">
   <a href="new.py?r=%s" class="l">%s</a>
 </span>''' % (r[1], r[0])
-
+if len(shcookie.routes) != 0 and not show_all_routes: 
+  print '''<span class="newbutton"><a href="bookings.py?ar=1" class="l">all routes</a></span>'''
 print '</div></div>'
 
 

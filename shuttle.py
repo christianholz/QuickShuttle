@@ -516,10 +516,15 @@ def pencode(d):
   return s
   
 
-def generate_key(user, pw):
+def generate_key(user, pw, routes=None):
   l = len(user)
   k = shconstants.ENCRYPT_KEY[l:]
-  s = user + "\x00" + pw + "\x00"
+  s = user + '\x00' + pw + '\x00'
+  if routes == None or routes == []:
+    r = '\0'
+  else:
+    r = struct.pack('<B', len(routes)) + b''.join([struct.pack('<H', v) for v in routes])
+  s += r
   h = md5.md5(s).hexdigest()
   s += h[:32 - len(s)]
   c = encode(k, s)
@@ -535,24 +540,31 @@ def extract_credentials(s):
   i = s.index("\x00")
   u = s[:i]
   s = s[i + 1:]
-  p = s[:s.index("\x00")]
-  return [u, p]
+  i = s.index("\x00")
+  p = s[:i]
+  s = s[i + 1:]
+  l = struct.unpack('<B', s[0])[0]
+  if l > 0:
+    rid = struct.unpack('<' + 'H' * l, s[1:l * 2 + 1])
+  else:
+    rid = ()
+  return [u, p, rid]
 
 
 def encode(key, clear):
-    enc = []
-    for i in range(len(clear)):
-        key_c = key[i % len(key)]
-        enc_c = chr((ord(clear[i]) + ord(key_c)) % 256)
-        enc.append(enc_c)
-    return "".join(enc)
+  enc = []
+  for i in range(len(clear)):
+    key_c = key[i % len(key)]
+    enc_c = chr((ord(clear[i]) + ord(key_c)) % 256)
+    enc.append(enc_c)
+  return "".join(enc)
 
 
 def decode(key, enc):
-    dec = []
-    for i in range(len(enc)):
-        key_c = key[i % len(key)]
-        dec_c = chr((256 + ord(enc[i]) - ord(key_c)) % 256)
-        dec.append(dec_c)
-    return "".join(dec)
+  dec = []
+  for i in range(len(enc)):
+    key_c = key[i % len(key)]
+    dec_c = chr((256 + ord(enc[i]) - ord(key_c)) % 256)
+    dec.append(dec_c)
+  return "".join(dec)
 
