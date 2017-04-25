@@ -484,13 +484,14 @@ def get_times_full(isAM, date, routeID, pickID, dropID):
 def download_all_full():
   all_routes = {}
   morning = [True, False]
+  dt = datetime.datetime.now()
   for isAM in morning:
     print "downloading for morning = " + str(isAM)
-    routes = get_routes_full(isAM, dt='11/28/2016')
+    routes = get_routes_full(isAM, dt=dt.strftime('%m/%d/%Y'))
     all_routes[isAM] = {}
     for j, r in enumerate(routes):
       print "  downloading stops for " + r[1] + " (%d/%d)" % (j + 1, len(routes))
-      s = get_stop_locations_full(isAM, r[0], dt='11/28/2016')
+      s = get_stop_locations_full(isAM, r[0], dt=dt.strftime('%m/%d/%Y'))
       s.extend(r[2:4])
       all_routes[isAM][r[1]] = s
   json.dump(all_routes, open("all.json", "w"))

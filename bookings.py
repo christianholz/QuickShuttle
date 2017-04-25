@@ -73,7 +73,9 @@ if 'cal' in form:
 print '<div id="bookings">'
 
 for b in bookings:
-  dt = datetime.datetime.strptime(b['dd'], "%m/%d/%Y")
+  dt = datetime.datetime.strptime(b['dd'] + ' ' + b['dt'], "%m/%d/%Y %I:%M %p")
+  if dt < datetime.datetime.now() - datetime.timedelta(hours=2) - datetime.timedelta(minutes=90):
+	  continue
   if "PM" in b['dt']:
     csspm = " pm"
   else:

@@ -48,14 +48,16 @@ body {
 
 .booking form {
 	position: absolute;
-	top: 5px;
+	bottom: 5px;
 	right: 5px;
+	margin: 0px;
 }
 
 .booking input {
 	width: 100px;
 	height: 40px;
 	font-size:10pt;
+	display: block;
 }
 
 .booking .t {
@@ -65,14 +67,14 @@ body {
 .booking .r {
 	position: absolute;
 	top: 5px;
-	right: 300px;
+	right: 5px;
 	text-align: right;
 }
 
 .booking .cn {
 	position: absolute;
 	top: 1em;
-	right: 300px;
+	right: 5px;
 	text-align: right;
 	margin-top: 8px;
 	font-weight: bold;
