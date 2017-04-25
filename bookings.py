@@ -73,22 +73,29 @@ if 'cal' in form:
 print '<div id="bookings">'
 
 for b in bookings:
-  dt = datetime.datetime.strptime(b[1], "%m/%d/%Y")
-  if dt.hour > 13:
+  dt = datetime.datetime.strptime(b['dd'], "%m/%d/%Y")
+  if "PM" in b['dt']:
     csspm = " pm"
   else:
     csspm = ""
+  if dt < datetime.datetime.now() - datetime.timedelta(hours=2) - datetime.timedelta(minutes=15):
+    csspm += " past"
   print '''<div class="booking%s">
   <span class="t">%s</span>
   <span class="r">%s</span>
   <span class="dt">%s</span><span class="dl">%s</span>
-  <span class="gt">%s</span><span class="gl">%s</span>
-  <form method="post" action="%s">
-  <input type="hidden" name="action" value="cancel"/>
-  <input type="hidden" name="id" value="%s"/>
-  <input type="submit" value="cancel"/>
-  </form>
-</div>''' % (csspm, dt.strftime("%A, %b %-d"), b[0], b[4], b[3],
-  b[6], b[5], os.environ["SCRIPT_NAME"], b[2])
+  <span class="gt">%s</span><span class="gl">%s</span>''' % (
+    csspm, dt.strftime("%A, %b %d"), b['r'], b['dt'], b['dl'], b['gt'], b['gl'])
+  if 'cn' in b:
+    print '  <span class="cn">Connector #%s</span>' % (b['cn'])
+  if 'cl' in b:
+    print '''  <form method="post" action="%s">
+    <input type="hidden" name="action" value="cancel"/>
+    <input type="hidden" name="id" value="%s"/>
+    <input type="submit" value="cancel"/>
+  </form>''' % (os.environ["SCRIPT_NAME"], b['cl'])
+  print '</div>'
 
-print '</div></body></html>'
+print '</div></body><!--'
+# print datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+print '--></html>'

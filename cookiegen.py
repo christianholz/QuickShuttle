@@ -34,9 +34,19 @@ if 'user' in form and 'pass' in form:
   
   cookie = Cookie.SimpleCookie()
   cookie["skey"] = k
-  cookie["skey"]["domain"] = ".cholz.de"
-  cookie["skey"]["path"] = "/shuttle"
+  if SERVER_PORT == 8080:
+    cookie["skey"]["domain"] = "localhost"
+    cookie["skey"]["path"] = "/cgi-bin"
+  else:
+    cookie["skey"]["domain"] = '.' + os.environ['SERVER_NAME']
+    cookie["skey"]["path"] = "/shuttle"
   cookie["skey"]["expires"] = dt.strftime("%a, %d-%b-%Y %H:%M:%S PST")
+  
+  if "HTTP_ORIGIN" in os.environ:
+    origin = os.environ["HTTP_ORIGIN"]
+  else:
+    origin = ""
+  
   print cookie.output()
   # print "Set-Cookie: key=%s; expires={}; path=/shuttle/; domain=cholz.de; version=1" % (
   #   k, dt.strftime("%a, %d-%b-%Y %H:%M:%S PST"))
@@ -46,7 +56,7 @@ if 'user' in form and 'pass' in form:
   print '''<pre>
   ready to bookmark:
   <a href="%s%s/bookings.py">bookings</a>
-</pre>''' % (os.environ["HTTP_ORIGIN"], os.path.dirname(os.environ["SCRIPT_NAME"]))
+</pre>''' % (origin, os.path.dirname(os.environ["SCRIPT_NAME"]))
 else:
   alldata = json.load(open("all.json"))
   routes = [r[:-3] for r in alldata["true"].keys()]

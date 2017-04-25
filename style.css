@@ -65,11 +65,25 @@ body {
 .booking .r {
 	position: absolute;
 	top: 5px;
-	left: 140px;
+	right: 300px;
+	text-align: right;
+}
+
+.booking .cn {
+	position: absolute;
+	top: 1em;
+	right: 300px;
+	text-align: right;
+	margin-top: 8px;
+	font-weight: bold;
 }
 
 .booking .d {
 	margin-top: 5px;
+}
+
+.past {
+	color: #888;
 }
 
 #info {

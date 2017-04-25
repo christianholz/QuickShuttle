@@ -104,42 +104,55 @@ def get_bookings():
   spl = s.split("\n")
   for j, l in enumerate(spl):
     l = l.strip()
+    if l == '</li>' and st != 0:
+      st = 0
+      continue
     
     if st == 0:
       try:
         i = l.index('Date: ')
-        t = [spl[j - 5].strip(), l[i + 6:]]
+        t = {'r': spl[j - 5].strip(), 'dd': l[i + 6:]}
         trips.append(t)
-        st += 1
+        st = 1
       except ValueError:
         pass
     if st == 1:
       m = rc.findall(l)
       if len(m):
-        t.append(m[0])
-        st += 1
-    elif st == 2:
+        t['cl'] = m[0]
+        st = 2
+        
+    if st <= 2:
       try:
         i = l.index('Pickup: <b>')
-        t.append(l[i + 11:-4])
-        st += 1
+        t['dl'] = l[i + 11:-4]
+        st = 3
       except ValueError:
         pass
     elif st == 3:
       i = l.index('&nbsp;@&nbsp;<b>')
-      t.append(l[i + 16:-4])
-      st += 1
-    elif st == 4:
+      t['dt'] = l[i + 16:-4]
+      st = 4
+    
+    if st <= 4:
       try:
         i = l.index('Dropoff: <b>')
-        t.append(l[i + 12:-4])
-        st += 1
+        t['gl'] = l[i + 12:-4]
+        st = 5
       except ValueError:
         pass
     elif st == 5:
       i = l.index('&nbsp;@&nbsp;<b>')
-      t.append(l[i + 16:-4])
-      st = 0
+      t['gt'] = l[i + 16:-4]
+      st = 6
+    
+    if st <= 6:
+      try:
+        i = l.index('Connector : ')
+        t['cn'] = l[i + 12:]
+        st = 0
+      except ValueError:
+        pass
   return trips
 
 
