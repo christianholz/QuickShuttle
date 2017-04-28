@@ -479,7 +479,85 @@ def get_times_full(isAM, date, routeID, pickID, dropID):
         times.append(t)
         nl = 5
   return times
+
+
+def get_shuttle_location(route, shuttleID):
+  opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), handler, NoRedirection)
+  opener.addheaders = [('User-Agent', shconstants.USER_AGENT),
+    ('Referer', shconstants.URL_WHERE_MOBILE),
+    ('Accept', '*/*'),
+    ('Accept-Encoding', 'gzip, deflate, br'),
+    ('Accept-Language', 'en-US,en;q=0.8')
+  ]
+  r = opener.open(shconstants.URL_WHERE_MOBILE + "?" + urllib.urlencode({'name': route}))
+  s = r.read()
   
+  shid = ''
+  st = 0
+  rc = re.compile('href=\'/WhereBus/Map\?n=([0-9]+)&amp;t=')
+  spl = s.split("\n")
+  for j, l in enumerate(spl):
+    l = l.strip()
+        
+    if st == 0:
+      try:
+        i = l.index('<td class="eta-vehicle">')
+        st = 1
+      except ValueError:
+        pass
+      continue
+    if st == 1:
+      if shuttleID == l:
+        st = 2
+      else:
+        st = 0
+    if st == 2:
+      m = rc.findall(l)
+      if len(m) > 0:
+        shid = m[0]
+        break
+    
+    if '*Departed' in l:
+      st = 0
+  
+  if shid == '':
+    return None
+  
+  opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj), handler, NoRedirection)
+  opener.addheaders = [('User-Agent', shconstants.USER_AGENT),
+    ('Origin', shconstants.URL_MOBILE),
+    ('X-Requested-With', 'XMLHttpRequest'),
+    ('Referer', shconstants.URL_WHERE_MOBILE),
+    ('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'),
+    ('Accept', '*/*'),
+    ('Accept-Encoding', 'gzip, deflate, br'),
+    ('Accept-Language', 'en-US,en;q=0.8')
+  ]
+  r = opener.open(shconstants.URL_MAP_MOBILE, urllib.urlencode({
+    'n': shid
+  }));
+  
+  try:
+    j = json.loads(r.read())
+    return {'id': j['ID'], 'name': j['Name'], 'lat': j['Latitude'], 'lon': j['Longitude']}
+  except json.decoder.JSONDecodeError:
+    pass
+  return None
+  
+
+def get_stop_gps(full_route, stop):
+  routes = json.load(open("all.json"))
+  if 'AM' in full_route:
+    k = 'true'
+  else:
+    k = 'false'
+  for r in routes[k].items():
+    if r[0] == full_route:
+      for s in r[1][0]:
+        if s[1] == stop:
+          return (s[2], s[3])
+  return None
+
 
 def download_all_full():
   all_routes = {}
@@ -520,6 +598,15 @@ def download_map_tiles():
           dl.append(sid)
 
 
+def get_maps_eta(fr, to):
+  r = urllib2.urlopen('https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%f,%f&destinations=%f,%f&key=%s' % (
+    fr[0], fr[1], to[0], to[1], shconstants.GKEY))
+  j = json.loads(r.read())
+  dur = j['rows'][0]['elements'][0]['duration']['text'] # ['value']
+  dst = j['rows'][0]['elements'][0]['distance']['text'] # ['value']
+  return [dst, dur, j['origin_addresses'][0]]
+  
+  
 def pencode(d):
   if len(d) == 0:
     return ""

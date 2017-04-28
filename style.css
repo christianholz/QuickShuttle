@@ -55,7 +55,7 @@ body {
 
 .booking input {
 	width: 100px;
-	height: 40px;
+	height: 30px;
 	font-size:10pt;
 	display: block;
 }
@@ -78,6 +78,20 @@ body {
 	text-align: right;
 	margin-top: 8px;
 	font-weight: bold;
+}
+
+.booking .et {
+	position: absolute;
+	top: 2em;
+	right: 5px;
+	text-align: right;
+	margin-top: 12px;
+}
+
+.booking .et a {
+	color: #333;
+	font-weight: normal;
+	text-decoration: underline;
 }
 
 .booking .d {

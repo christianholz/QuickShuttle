@@ -25,6 +25,10 @@ URL_DOUBLE_DESKTOP  = 'https://www.connectorride.com/Flex/BookFlexDoubleBook'
 
 URL_OUTLOOK_DESKTOP = 'https://www.connectorride.com/Flex/ReturnOutlookLink'
 
+URL_WHERE_MOBILE    = 'https://www.connectorride.mobi/WhereBus/ETA'
+URL_MAP_MOBILE      = 'https://www.connectorride.mobi/WhereBus/UpdateMap'
+
+
 MAP_W = 200
 MAP_H = 100
 STOPS_DIR = 'stops'

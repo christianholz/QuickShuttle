@@ -39,14 +39,6 @@ alldata = json.load(open("all.json"))
 routes = [r[:-3] for r in alldata["true"].keys()]
 routes.sort()
 routes = [[r, alldata["true"][r + " AM"][2]] for r in routes if len(shcookie.routes) == 0 or show_all_routes or alldata["true"][r + " AM"][2] in shcookie.routes]
-# freq = {}
-# for v in routes:
-#   freq[v[:-3]] = 0
-# for b in bookings:
-#   freq[b[0][:-3]] += 1
-# freq = list(freq.items())
-# freq.sort()
-# freq.sort(lambda x, y:y[1] - x[1])
 
 
 # header bar
@@ -73,23 +65,36 @@ if 'cal' in form:
 print '<div id="bookings">'
 
 for b in bookings:
+  past = False
   dt = datetime.datetime.strptime(b['dd'] + ' ' + b['dt'], "%m/%d/%Y %I:%M %p")
-  if dt < datetime.datetime.now() - datetime.timedelta(hours=2) - datetime.timedelta(minutes=90):
+  if dt < datetime.datetime.now() - datetime.timedelta(hours=2) - datetime.timedelta(minutes=60):
 	  continue
   if "PM" in b['dt']:
     csspm = " pm"
   else:
     csspm = ""
-  if dt < datetime.datetime.now() - datetime.timedelta(hours=2) - datetime.timedelta(minutes=15):
+  if dt < datetime.datetime.now() - datetime.timedelta(hours=2) - datetime.timedelta(minutes=1):
+    past = True
     csspm += " past"
+  
   print '''<div class="booking%s">
   <span class="t">%s</span>
   <span class="r">%s</span>
   <span class="dt">%s</span><span class="dl">%s</span>
   <span class="gt">%s</span><span class="gl">%s</span>''' % (
     csspm, dt.strftime("%A, %b %d"), b['r'], b['dt'], b['dl'], b['gt'], b['gl'])
+  
   if 'cn' in b:
     print '  <span class="cn">Connector #%s</span>' % (b['cn'])
+    if not past:
+      loc = shuttle.get_shuttle_location(b['r'], b['cn'])
+      if loc != None:
+        stop = shuttle.get_stop_gps(b['r'], b['dl'])
+        if stop != None:
+          dst = shuttle.get_maps_eta((loc['lat'], loc['lon']), (stop[0], stop[1]))
+          print '  <span class="et">ETA %s (<a href="https://www.google.com/maps?q=%f,%f">%s</a>)</span>' % (
+            dst[1], loc['lat'], loc['lon'], dst[0])
+        
   if 'cl' in b:
     print '''  <form method="post" action="%s">
     <input type="hidden" name="action" value="cancel"/>

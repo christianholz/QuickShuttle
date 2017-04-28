@@ -1,0 +1,4 @@
+AddType text/html py
+AddHandler cgi-script .py
+
+DirectoryIndex bookings.py
