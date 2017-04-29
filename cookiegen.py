@@ -34,13 +34,17 @@ if 'user' in form and 'pass' in form:
   
   cookie = Cookie.SimpleCookie()
   cookie["skey"] = k
-  if SERVER_PORT == 8080:
+  if os.environ['SERVER_PORT'] == 8080:
     cookie["skey"]["domain"] = "localhost"
     cookie["skey"]["path"] = "/cgi-bin"
   else:
     cookie["skey"]["domain"] = '.' + os.environ['SERVER_NAME']
     cookie["skey"]["path"] = "/shuttle"
   cookie["skey"]["expires"] = dt.strftime("%a, %d-%b-%Y %H:%M:%S PST")
+  if os.environ['SERVER_NAME'].count('.') > 1:
+    cookie["skey"]["domain"] = os.environ['SERVER_NAME']
+  else:
+    cookie["skey"]["domain"] = '.' + os.environ['SERVER_NAME']
   
   if "HTTP_ORIGIN" in os.environ:
     origin = os.environ["HTTP_ORIGIN"]

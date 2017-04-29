@@ -94,11 +94,12 @@ body {
 	text-decoration: underline;
 }
 
+
 .booking .d {
 	margin-top: 5px;
 }
 
-.past {
+.past, .past .et a {
 	color: #888;
 }
 

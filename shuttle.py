@@ -598,11 +598,24 @@ def download_map_tiles():
           dl.append(sid)
 
 
+def friendly_format(sec):
+	if sec > 60:
+		m = (sec + 30) // 60
+		return str(m) + " min" + "s" if m > 0 else ""
+	elif sec < 10:
+		return "arrived"
+	elif sec < 30:
+		return "< 30 sec"
+	else:
+		return "< 1 min"
+
+
 def get_maps_eta(fr, to):
   r = urllib2.urlopen('https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%f,%f&destinations=%f,%f&key=%s' % (
     fr[0], fr[1], to[0], to[1], shconstants.GKEY))
   j = json.loads(r.read())
-  dur = j['rows'][0]['elements'][0]['duration']['text'] # ['value']
+  # dur = j['rows'][0]['elements'][0]['duration']['text'] # ['value']
+  dur = friendly_format(j['rows'][0]['elements'][0]['duration']['value'])
   dst = j['rows'][0]['elements'][0]['distance']['text'] # ['value']
   return [dst, dur, j['origin_addresses'][0]]
   

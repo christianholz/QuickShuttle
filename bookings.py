@@ -85,18 +85,18 @@ for b in bookings:
     csspm, dt.strftime("%A, %b %d"), b['r'], b['dt'], b['dl'], b['gt'], b['gl'])
   
   if 'cn' in b:
-    print '  <span class="cn">Connector #%s</span>' % (b['cn'])
+    print '  <span class="cn">Connector %s</span>' % (b['cn'])
     if not past:
       loc = shuttle.get_shuttle_location(b['r'], b['cn'])
       if loc != None:
         stop = shuttle.get_stop_gps(b['r'], b['dl'])
         if stop != None:
           dst = shuttle.get_maps_eta((loc['lat'], loc['lon']), (stop[0], stop[1]))
-          print '  <span class="et">ETA %s (<a href="https://www.google.com/maps?q=%f,%f">%s</a>)</span>' % (
+          print '  <span class="et">ETA: %s (<a href="https://www.google.com/maps?q=%f,%f">%s</a>)</span>' % (
             dst[1], loc['lat'], loc['lon'], dst[0])
         
   if 'cl' in b:
-    print '''  <form method="post" action="%s">
+    print '''  <form method="post" action="%s" onsubmit="return confirm('Cancel?');">
     <input type="hidden" name="action" value="cancel"/>
     <input type="hidden" name="id" value="%s"/>
     <input type="submit" value="cancel"/>
