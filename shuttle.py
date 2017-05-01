@@ -125,7 +125,7 @@ def get_bookings():
     if st <= 2:
       try:
         i = l.index('Pickup: <b>')
-        t['dl'] = l[i + 11:-4]
+        t['dl'] = l[i + 11:-4].replace('&amp;', '&')
         st = 3
       except ValueError:
         pass
@@ -137,7 +137,7 @@ def get_bookings():
     if st <= 4:
       try:
         i = l.index('Dropoff: <b>')
-        t['gl'] = l[i + 12:-4]
+        t['gl'] = l[i + 12:-4].replace('&amp;', '&')
         st = 5
       except ValueError:
         pass
