@@ -11,6 +11,7 @@ import shuttle
 import json
 import struct
 
+print "Content-type: text/html\r\n"
 
 form = cgi.FieldStorage()
 
@@ -30,7 +31,7 @@ if 'user' in form and 'pass' in form:
 
   dt = datetime.datetime.now()
   dt += datetime.timedelta(365)
-  print "Status: 200 Success"
+  # print "Status: 200 Success"
   
   cookie = Cookie.SimpleCookie()
   cookie["skey"] = k
@@ -55,7 +56,6 @@ if 'user' in form and 'pass' in form:
   # print "Set-Cookie: key=%s; expires={}; path=/shuttle/; domain=cholz.de; version=1" % (
   #   k, dt.strftime("%a, %d-%b-%Y %H:%M:%S PST"))
   #   # dt.strftime("%a, %d %b %Y %H:%M:%S +0000"))
-  print "Content-type: text/html\r\n"
 
   print '''<pre>
   ready to bookmark:
@@ -66,7 +66,7 @@ else:
   routes = [r[:-3] for r in alldata["true"].keys()]
   routes.sort()
   
-  print "Content-type: text/html\r\n"
+  # print "Content-type: text/html\r\n"
   print '''
 <pre>
 <form method="post">
